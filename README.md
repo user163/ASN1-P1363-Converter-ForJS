@@ -50,3 +50,16 @@ The above examples in ASN.1/DER format (the gaps are only there for the sake of 
 ```
 
 <h3>Note on the P1363 format:</h3>
+In the P1363 format, the number of bytes of r and s corresponds to the number of bytes of n. Values that are too short are padded from the left with 0x00, leading 0x00 for values that are too large (due to the byte sign) are truncated. The r and s formatted in this way are usually concatenated.  
+
+The function `toP1363Size()` formats r and s according to these rules. The number of bytes of n must be specified. 
+
+The above examples in P1363 format (the gaps are only there for the sake of clarity) are:
+
+```none
+9f7492eb1617fb160d0626db32133b43abf34029b9346c1dde38d99eb8815401 bf70252ef4a1ba94cd4c58817732f2e3c83233fa8e1a645338e37c3d4c1a7927
+00a73a5d2b36002711e8c706369131376174039fe6173d778eee0b9f8569df31 9da9780952e279c809bb798193d8e69260554d9f7c14eda614cd29229200f177
+007e509a3e6ac6ca5337b84109e43180dc24cdf9bbec9a3f607eaf630813160a 4a0160420abace1e29e92f43a7103ff3d752546ad78665c804cd593e4ad6fc83
+00004c1f45c4f3a891bb5965f803c352713c0ac33c08a4f98e8f235b6fd78c38 a786a733101df42c289294a0975c07499893c1cc8241feba2f01f2e3c03415b1
+```
+
