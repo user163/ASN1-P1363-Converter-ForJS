@@ -29,13 +29,13 @@ function asn1DerToP1363(asn1DerSignatureHex, sizeInBytes){
 // see https://crypto.stackexchange.com/a/57734
 function toMinSizedSignedBE(hex) {
 	if (hex.length % 2 != 0) hex = '0' + hex                                     // ensure an even number of hex digits: 0x3af -> 0x03af
-	hex = hex.replace(/^(0{2})+/, '') 											 // ensure a min sized unsigned big endian: 0x000085af -> 0x85af
+	hex = hex.replace(/^(0{2})+/, '')                                            // ensure a min sized unsigned big endian: 0x000085af -> 0x85af
 	if (hex.length > 1 && parseInt(hex.substr(0,2), 16) > 127) hex = '00' + hex  // ensure a min sized signed big endian: 0x85af -> 0x0085af
 	return hex
 }
 function toP1363Size(hex, sizeInBytes){
     if (hex.length > 2 * sizeInBytes) hex = hex.substr(hex.length - 2 * sizeInBytes, 2 * sizeInBytes) // truncate if size is larger than sizeInBytes
-	else if (hex.length < 2 * sizeInBytes) hex = hex.padStart(2 * sizeInBytes, '0')                   // pad with leading 0x00 if size is smaller than sizeInBytes 
+	else if (hex.length < 2 * sizeInBytes) hex = hex.padStart(2 * sizeInBytes, '0')               // pad with leading 0x00 if size is smaller than sizeInBytes 
 	return hex
 }
 
