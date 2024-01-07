@@ -1,0 +1,151 @@
+<html>
+<head>
+</head>
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/node-forge@1.3.1/dist/forge.min.js"></script>
+    <script type="text/javascript" src="converter.js"></script>
+    <script>
+
+		/*
+		# P-521 test data created with PyCryptodome
+
+		from Crypto.Hash import SHA512
+		from Crypto.PublicKey import ECC
+		from Crypto.Signature import DSS
+		message = b'I give my permission to order #4355'
+		key = key = ECC.generate(curve='P-521')
+		h = SHA512.new(message)
+		signer = DSS.new(key, 'deterministic-rfc6979', encoding='der')
+		signature = signer.sign(h)
+		print(signature.hex())
+		signer = DSS.new(key, 'deterministic-rfc6979')
+		signature = signer.sign(h)
+		print(signature.hex())
+		*/
+
+		// test 1
+		console.log('test 1')
+		var asn1DerSignatureHexTest = '30818702413c3cae14ed44c1086160cc8a0985d95bf7396482ec36365fbe266396ac72dbba5fde254fee66c5c9a47913a93f7e306fcbf1cf38e1ac301dbd40b53ccb93371dca0242008c783e7b2ee92d73ae138b47dbe6d76f5cb597ccd609b69561db9bcb5f4c47505401275d3dcaac365623e70b1c368b5c22c7fc1ab0c90ded4b4a868b03d8fd9e97'
+		var rHexTest= '003c3cae14ed44c1086160cc8a0985d95bf7396482ec36365fbe266396ac72dbba5fde254fee66c5c9a47913a93f7e306fcbf1cf38e1ac301dbd40b53ccb93371dca'
+		var sHexTest= '008c783e7b2ee92d73ae138b47dbe6d76f5cb597ccd609b69561db9bcb5f4c47505401275d3dcaac365623e70b1c368b5c22c7fc1ab0c90ded4b4a868b03d8fd9e97'
+		var p1363Test = asn1DerToP1363(asn1DerSignatureHexTest, 66)
+		console.log(p1363Test.r === rHexTest && p1363Test.s === sHexTest)
+		var asn1DerTest = p1363ToAsn1Der(rHexTest, sHexTest)
+		console.log(asn1DerTest === asn1DerSignatureHexTest)
+		var rUnsignedHexTest= '3c3cae14ed44c1086160cc8a0985d95bf7396482ec36365fbe266396ac72dbba5fde254fee66c5c9a47913a93f7e306fcbf1cf38e1ac301dbd40b53ccb93371dca'
+		var sUnsignedHexTest= '8c783e7b2ee92d73ae138b47dbe6d76f5cb597ccd609b69561db9bcb5f4c47505401275d3dcaac365623e70b1c368b5c22c7fc1ab0c90ded4b4a868b03d8fd9e97'
+		var asn1DerTest = p1363ToAsn1Der(rUnsignedHexTest, sUnsignedHexTest)
+		console.log(asn1DerTest === asn1DerSignatureHexTest)
+
+		// test 2
+		console.log('test 2')
+		var asn1DerSignatureHexTest = '30818802420127ca4e8c133f968b0aea5918ba66303ecead3e214616c0619ec6623c0b1f93af90add23aa1e885718e17309382fa62f1be4d27a4ad44be9ee746c6a833675bc151024201c98c7e630cf353235ebcc1139776b27eae88169d4764d6ee794e90d377752168e3b1e66fad5100b5e843280a81de3b10530882bf63f5eae47cfa2869b6758a842f'
+		var rHexTest= '0127ca4e8c133f968b0aea5918ba66303ecead3e214616c0619ec6623c0b1f93af90add23aa1e885718e17309382fa62f1be4d27a4ad44be9ee746c6a833675bc151'
+		var sHexTest= '01c98c7e630cf353235ebcc1139776b27eae88169d4764d6ee794e90d377752168e3b1e66fad5100b5e843280a81de3b10530882bf63f5eae47cfa2869b6758a842f'
+		var p1363Test = asn1DerToP1363(asn1DerSignatureHexTest, 66)
+		console.log(p1363Test.r === rHexTest && p1363Test.s === sHexTest)
+		var asn1DerTest = p1363ToAsn1Der(rHexTest, sHexTest)
+		console.log(asn1DerTest === asn1DerSignatureHexTest)
+
+		// test 3
+		console.log('test 3')
+		var asn1DerSignatureHexTest = '3081880242008ac5c0a260d98fe6de767f5a32fda1789afc0b7df2ea0cea10ace7b54dea881022ab0263eea796b1a450eaf77eb380cd0be725a3ea89f42b794956cda95a949fe10242012f1e8a7110a1c4f96addc0e1a44c0dacf92ed823292b263f400231ee7f22ec9b1e2035d5822f32a6f9d9a1131996e6053d9817617b53ee3674e708473697f657ff'
+		var rHexTest= '008ac5c0a260d98fe6de767f5a32fda1789afc0b7df2ea0cea10ace7b54dea881022ab0263eea796b1a450eaf77eb380cd0be725a3ea89f42b794956cda95a949fe1'
+		var sHexTest= '012f1e8a7110a1c4f96addc0e1a44c0dacf92ed823292b263f400231ee7f22ec9b1e2035d5822f32a6f9d9a1131996e6053d9817617b53ee3674e708473697f657ff'
+		var p1363Test = asn1DerToP1363(asn1DerSignatureHexTest, 66)
+		console.log(p1363Test.r === rHexTest && p1363Test.s === sHexTest)
+		var asn1DerTest = p1363ToAsn1Der(rHexTest, sHexTest)
+		console.log(asn1DerTest === asn1DerSignatureHexTest)
+		var rUnsignedHexTest= '8ac5c0a260d98fe6de767f5a32fda1789afc0b7df2ea0cea10ace7b54dea881022ab0263eea796b1a450eaf77eb380cd0be725a3ea89f42b794956cda95a949fe1'
+		var sUnsignedHexTest= '012f1e8a7110a1c4f96addc0e1a44c0dacf92ed823292b263f400231ee7f22ec9b1e2035d5822f32a6f9d9a1131996e6053d9817617b53ee3674e708473697f657ff'
+		var asn1DerTest = p1363ToAsn1Der(rUnsignedHexTest, sUnsignedHexTest)
+		console.log(asn1DerTest === asn1DerSignatureHexTest)
+
+		// test 4
+		console.log('test 4')
+		var asn1DerSignatureHexTest = '30818702420176ffa0ef3eb10c98d9bfc4b0c18e99272d9a284e92ff24f050cfc66bc09ed6a08ec98065a9e2fc20e28ef0941306b5ecb6afb03ecd18a5ff3a8c36932c8643dd9c02411710e60db7af33b077ddd0eed8d6ae7f5765f72efaa4a293128e0907183743e47271a2ab8b3211f64e4614f376c6fae1d350d10392efb23fa0d0ce0c83aa5cda84'
+		var rHexTest= '0176ffa0ef3eb10c98d9bfc4b0c18e99272d9a284e92ff24f050cfc66bc09ed6a08ec98065a9e2fc20e28ef0941306b5ecb6afb03ecd18a5ff3a8c36932c8643dd9c'
+		var sHexTest= '001710e60db7af33b077ddd0eed8d6ae7f5765f72efaa4a293128e0907183743e47271a2ab8b3211f64e4614f376c6fae1d350d10392efb23fa0d0ce0c83aa5cda84'
+		var p1363Test = asn1DerToP1363(asn1DerSignatureHexTest, 66)
+		console.log(p1363Test.r === rHexTest && p1363Test.s === sHexTest)
+		var asn1DerTest = p1363ToAsn1Der(rHexTest, sHexTest)
+		console.log(asn1DerTest === asn1DerSignatureHexTest)
+		var rUnsignedHexTest= '0176ffa0ef3eb10c98d9bfc4b0c18e99272d9a284e92ff24f050cfc66bc09ed6a08ec98065a9e2fc20e28ef0941306b5ecb6afb03ecd18a5ff3a8c36932c8643dd9c'
+		var sUnsignedHexTest= '1710e60db7af33b077ddd0eed8d6ae7f5765f72efaa4a293128e0907183743e47271a2ab8b3211f64e4614f376c6fae1d350d10392efb23fa0d0ce0c83aa5cda84'
+		var asn1DerTest = p1363ToAsn1Der(rUnsignedHexTest, sUnsignedHexTest)
+		console.log(asn1DerTest === asn1DerSignatureHexTest)
+
+		/*
+		# P-256 test data created with PyCryptodome
+
+		from Crypto.Hash import SHA256
+		from Crypto.PublicKey import ECC
+		from Crypto.Signature import DSS
+		message = b'I give my permission to order #4355'
+		key = key = ECC.generate(curve='P-256')
+		h = SHA256.new(message)
+		signer = DSS.new(key, 'deterministic-rfc6979', encoding='der')
+		signature = signer.sign(h)
+		print(signature.hex())
+		signer = DSS.new(key, 'deterministic-rfc6979')
+		signature = signer.sign(h)
+		print(signature.hex())
+		*/
+
+		// test 5
+		console.log('test 5')
+		var asn1DerSignatureHexTest = '30440220343cdc3dce795ed4ad24391860fc6bf18006d2dcc7bf973b9ef979eea3e64b2602205c677361872b876176c156416a2df4100cb686cd3fcae45fc0c3cf5ca53e3058'
+		var rHexTest= '343cdc3dce795ed4ad24391860fc6bf18006d2dcc7bf973b9ef979eea3e64b26'
+		var sHexTest= '5c677361872b876176c156416a2df4100cb686cd3fcae45fc0c3cf5ca53e3058'
+		var p1363Test = asn1DerToP1363(asn1DerSignatureHexTest, 32)
+		console.log(p1363Test.r === rHexTest && p1363Test.s === sHexTest)
+		var asn1DerTest = p1363ToAsn1Der(rHexTest, sHexTest)
+		console.log(asn1DerTest === asn1DerSignatureHexTest)
+
+		// test 6
+		console.log('test 6')
+		var asn1DerSignatureHexTest = '30460221009f7492eb1617fb160d0626db32133b43abf34029b9346c1dde38d99eb8815401022100bf70252ef4a1ba94cd4c58817732f2e3c83233fa8e1a645338e37c3d4c1a7927'
+		var rHexTest= '9f7492eb1617fb160d0626db32133b43abf34029b9346c1dde38d99eb8815401'
+		var sHexTest= 'bf70252ef4a1ba94cd4c58817732f2e3c83233fa8e1a645338e37c3d4c1a7927'
+		var p1363Test = asn1DerToP1363(asn1DerSignatureHexTest, 32)
+		console.log(p1363Test.r === rHexTest && p1363Test.s === sHexTest)
+		var asn1DerTest = p1363ToAsn1Der(rHexTest, sHexTest)
+		console.log(asn1DerTest === asn1DerSignatureHexTest)
+
+		// test 7
+		console.log('test 7')
+		var asn1DerSignatureHexTest = '3045022100898f3950d26054683ecd7a1705a751ca93d95b94b75edd7040331fcc9266d05d02200a21bac316e4555aa70ada8eada0cce431995186759eb1f53d9eaf8cfebcedbc'
+		var rHexTest= '898f3950d26054683ecd7a1705a751ca93d95b94b75edd7040331fcc9266d05d'
+		var sHexTest= '0a21bac316e4555aa70ada8eada0cce431995186759eb1f53d9eaf8cfebcedbc'
+		var p1363Test = asn1DerToP1363(asn1DerSignatureHexTest, 32)
+		console.log(p1363Test.r === rHexTest && p1363Test.s === sHexTest)
+		var asn1DerTest = p1363ToAsn1Der(rHexTest, sHexTest)
+		console.log(asn1DerTest === asn1DerSignatureHexTest)
+
+		// test 8
+		console.log('test 8')
+		var asn1DerSignatureHexTest = '304502201154770fc21c37c23da800ad4822b9c44d907eee8e9a734f171bd9febf7a4c68022100afaffd287ecf1e0521cf136499855e72ce466c2c84ea54bf0a07996a32a14a53'
+		var rHexTest= '1154770fc21c37c23da800ad4822b9c44d907eee8e9a734f171bd9febf7a4c68'
+		var sHexTest= 'afaffd287ecf1e0521cf136499855e72ce466c2c84ea54bf0a07996a32a14a53'
+		var p1363Test = asn1DerToP1363(asn1DerSignatureHexTest, 32)
+		console.log(p1363Test.r === rHexTest && p1363Test.s === sHexTest)
+		var asn1DerTest = p1363ToAsn1Der(rHexTest, sHexTest)
+		console.log(asn1DerTest === asn1DerSignatureHexTest)
+
+		// test 9
+		console.log('test 9')
+		var asn1DerSignatureHexTest = '3045022000a73a5d2b36002711e8c706369131376174039fe6173d778eee0b9f8569df310221009da9780952e279c809bb798193d8e69260554d9f7c14eda614cd29229200f177'
+		var rHexTest= '00a73a5d2b36002711e8c706369131376174039fe6173d778eee0b9f8569df31'
+		var sHexTest= '9da9780952e279c809bb798193d8e69260554d9f7c14eda614cd29229200f177'
+		var p1363Test = asn1DerToP1363(asn1DerSignatureHexTest, 32)
+		console.log(p1363Test.r === rHexTest && p1363Test.s === sHexTest)
+		var asn1DerTest = p1363ToAsn1Der(rHexTest, sHexTest)
+		console.log(asn1DerTest === asn1DerSignatureHexTest)
+		var rUnsignedHexTest= 'a73a5d2b36002711e8c706369131376174039fe6173d778eee0b9f8569df31'
+		var sUnsignedHexTest= '9da9780952e279c809bb798193d8e69260554d9f7c14eda614cd29229200f177'
+		var asn1DerTest = p1363ToAsn1Der(rUnsignedHexTest, sUnsignedHexTest)
+		console.log(asn1DerTest === asn1DerSignatureHexTest)
+
+    </script>
+</body>
+</html>
