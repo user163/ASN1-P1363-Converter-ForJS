@@ -34,7 +34,7 @@ function toMinSizedSignedBE(hex) {
 	return hex
 }
 function toP1363Size(hex, sizeInBytes){
-    if (hex.length > 2 * sizeInBytes) hex = hex.substr(hex.length - 2 * sizeInBytes, 2 * sizeInBytes) // truncate if size is larger than sizeInBytes
+	if (hex.length > 2 * sizeInBytes) hex = hex.substr(hex.length - 2 * sizeInBytes, 2 * sizeInBytes) // truncate if size is larger than sizeInBytes
 	else if (hex.length < 2 * sizeInBytes) hex = hex.padStart(2 * sizeInBytes, '0')                   // pad with leading 0x00 if size is smaller than sizeInBytes 
 	return hex
 }
