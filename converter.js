@@ -8,7 +8,7 @@ function p1363ToAsn1Der(rHex, sHex){
 			asn1.create(asn1.Class.UNIVERSAL, asn1.Type.INTEGER, false, forge.util.hexToBytes(rHex)),
 			asn1.create(asn1.Class.UNIVERSAL, asn1.Type.INTEGER, false, forge.util.hexToBytes(sHex)),
 		])
-		return asn1.toDer(asn1Signature).toHex()
+	return asn1.toDer(asn1Signature).toHex()
 }
 
 function asn1DerToP1363(asn1DerSignatureHex, sizeInBytes){
@@ -20,9 +20,9 @@ function asn1DerToP1363(asn1DerSignatureHex, sizeInBytes){
 			{name: 'Signature.SPart', tagClass: asn1.Class.UNIVERSAL, type: asn1.Type.INTEGER, constructed: false, captureAsn1: 'spart'}
 		]}
 	var capture = {}, errors = []
-		if(!asn1.validate(asn1Signature, signatureValidator, capture, errors)) {
-			throw 'ASN.1 object is not an asn1Signature.';
-		}
+	if(!asn1.validate(asn1Signature, signatureValidator, capture, errors)) {
+		throw 'ASN.1 object is not an asn1Signature.';
+	}
 	return {r: toP1363Size(forge.util.bytesToHex(capture.rpart.value), sizeInBytes), s: toP1363Size(forge.util.bytesToHex(capture.spart.value), sizeInBytes)}
 }
 
@@ -35,7 +35,7 @@ function toMinSizedSignedBE(hex) {
 }
 function toP1363Size(hex, sizeInBytes){
     if (hex.length > 2 * sizeInBytes) hex = hex.substr(hex.length - 2 * sizeInBytes, 2 * sizeInBytes) // truncate if size is larger than sizeInBytes
-	else if (hex.length < 2 * sizeInBytes) hex = hex.padStart(2 * sizeInBytes, '0')               // pad with leading 0x00 if size is smaller than sizeInBytes 
+	else if (hex.length < 2 * sizeInBytes) hex = hex.padStart(2 * sizeInBytes, '0')                   // pad with leading 0x00 if size is smaller than sizeInBytes 
 	return hex
 }
 
