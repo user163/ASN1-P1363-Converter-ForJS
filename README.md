@@ -63,3 +63,5 @@ The above examples in P1363 format (the gaps are only there for the sake of clar
 00004c1f45c4f3a891bb5965f803c352713c0ac33c08a4f98e8f235b6fd78c38 a786a733101df42c289294a0975c07499893c1cc8241feba2f01f2e3c03415b1
 ```
 
+<h3>Notes regarding different curves:</h3>
+As data types (e.g. INTEGER) are encoded in the ASN.1/DER format and this encoding depends on the value (e.g. for INTEGER greater than 127 or less), different byte sequences may occur for different curves (e.g. P-256 and P-521) (in addition to the different r and s values, see e.g. https://security.stackexchange.com/a/164906).
